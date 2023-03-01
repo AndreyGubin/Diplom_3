@@ -1,6 +1,8 @@
 package model;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class FormPageElements {
 
@@ -20,6 +22,8 @@ public class FormPageElements {
             "and (text() = 'Войти')]");
     private final By loginRegisterButton = By.xpath(".//a[@class = 'Auth_link__1fOlj']");
     private final By loginResetPassLink = By.xpath(".//a[@class = 'Auth_link__1fOlj']");
+    private final By loginText = By.xpath("//h2[contains(text(), 'Вход')]");
+    private final By incorrectPassText = By.xpath("//p[contains(text(), 'Некорректный пароль')]");
 
     public void setName(String name) {
         driver.findElement(nameField).sendKeys(name);
@@ -66,5 +70,14 @@ public class FormPageElements {
 
     public void clickLoginRegisterButton() {
         driver.findElement(loginRegisterButton).click();
+    }
+
+    public void findLoginText() {
+        new WebDriverWait(driver, 5).until(ExpectedConditions.
+                presenceOfElementLocated(loginText));
+    }
+
+    public void findIncorrectPassText() {
+        driver.findElement(incorrectPassText);
     }
 }

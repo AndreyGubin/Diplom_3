@@ -6,11 +6,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static config.Config.*;
-import static org.junit.Assert.assertTrue;
 
 public class RegistrationTests {
 
@@ -27,12 +24,11 @@ public class RegistrationTests {
         randomName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
     }
 
-    // Проверить: если нажать на логотип «Самоката», попадёшь на главную страницу «Самоката».
     @Test
     @DisplayName("Регистрация с валидными данными")
     public void registerValidData() {
         // переходим на страницу приложения
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
 
@@ -42,17 +38,16 @@ public class RegistrationTests {
         objFormPage.clickRegisterButton();
 
         // в случае успешной регистрации отобразится страница входа, ожидаем текст и проверяем URL
-        new WebDriverWait(driver, 5).until(ExpectedConditions.
-                presenceOfElementLocated(By.xpath("//h2[contains(text(), 'Вход')]")));
+        objFormPage.findLoginText();
         String URL = driver.getCurrentUrl();
-        Assert.assertEquals("https://stellarburgers.nomoreparties.site/login", URL);
+        Assert.assertEquals(loginUrl, URL);
     }
 
     @Test
     @DisplayName("Проверка ошибки при вводе пароля менее 5 символов")
     public void registerInvalidPassword() {
         // переходим на страницу приложения
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
 
@@ -60,10 +55,7 @@ public class RegistrationTests {
         objFormPage.clickRegisterLink();
         objFormPage.fillRegisterForm(randomName, randomMail, "12345");
         objFormPage.clickRegisterButton();
-
-        WebElement actualText = driver.findElement(By.xpath("//p[contains(text(), 'Некорректный пароль')]"));
-        boolean textPresent = actualText.isDisplayed();
-        assertTrue(textPresent);
+        objFormPage.findIncorrectPassText();
     }
 
     @After

@@ -4,11 +4,8 @@ import model.FormPageElements;
 import model.MainPageElements;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static config.Config.*;
 
@@ -26,7 +23,7 @@ public class LoginTests {
         randomPass = RandomStringUtils.randomAlphabetic(10);
         randomName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
 
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
 
@@ -36,17 +33,16 @@ public class LoginTests {
         objFormPage.clickRegisterButton();
 
         // в случае успешной регистрации отобразится страница входа, ожидаем текст и проверяем URL
-        new WebDriverWait(driver, 5).until(ExpectedConditions.
-                presenceOfElementLocated(By.xpath("//h2[contains(text(), 'Вход')]")));
+        objFormPage.findLoginText();
         String URL = driver.getCurrentUrl();
-        Assert.assertEquals("https://stellarburgers.nomoreparties.site/login", URL);
+        Assert.assertEquals(loginUrl, URL);
     }
 
     @Test
     @DisplayName("Вход по кнопке «Войти в аккаунт» на главной")
     public void loginValidData() {
         // переходим на страницу приложения
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
 
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
@@ -60,7 +56,7 @@ public class LoginTests {
     @DisplayName("Вход через кнопку «Личный кабинет»")
     public void loginValidData2() {
         // переходим на страницу приложения
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
 
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
@@ -74,16 +70,14 @@ public class LoginTests {
     @DisplayName("Вход через кнопку в форме регистрации")
     public void loginValidData3() {
         // переходим на страницу приложения
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
 
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
 
         objMainPage.clickAccountButton();
-
         objFormPage.clickRegisterLink();
         objFormPage.clickLoginRegisterButton();
-
         objFormPage.fillLoginForm(randomMail, randomPass);
         objFormPage.clickLoginButton();
     }
@@ -92,7 +86,7 @@ public class LoginTests {
     @DisplayName("Вход через кнопку в форме восстановления пароля")
     public void loginValidData4() {
         // переходим на страницу приложения
-        driver.get("https://stellarburgers.nomoreparties.site/");
+        driver.get(mainUrl);
 
         MainPageElements objMainPage = new MainPageElements(driver);
         FormPageElements objFormPage = new FormPageElements(driver);
@@ -109,6 +103,4 @@ public class LoginTests {
         // Закрываем браузер
         driver.quit();
     }
-
-
 }
